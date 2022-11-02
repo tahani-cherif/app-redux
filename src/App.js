@@ -3,7 +3,8 @@ import { Items } from './component/items';
 import { useDispatch, useSelector } from 'react-redux';
 import { Produit } from './component/produit';
 import { cartaction } from './store/cartslice';
-
+import { useEffect } from 'react';
+import axios from 'axios';
 function App() {
   const quantite=useSelector((state)=>state.cart.totalquantite);
   const somme=useSelector((state)=>state.cart.totalprix);
@@ -12,7 +13,20 @@ function App() {
   const dispatch=useDispatch();
   const affiche=()=>{dispatch(
   cartaction.affichepanier()  )}
-
+  const cart=useSelector((state)=>state.cart);
+  useEffect(() => {
+    const sendPostRequest = async () => {
+          const res = await axios.put('https://app-redux-9b6bb-default-rtdb.firebaseio.com/cartItems.json', JSON.stringify(cart));
+          const data=await res.JSON
+        }
+  sendPostRequest();
+    // fetch('https://app-redux-9b6bb-default-rtdb.firebaseio.com/cartItems.json',
+    //   {
+    //    method:"PUT",
+    //   body:JSON.stringify(cart)
+    //   })
+  }, [cart])
+    
   return (
     <div className="App">
       <di style={{display:"flex",justifyContent:"end"}}>
